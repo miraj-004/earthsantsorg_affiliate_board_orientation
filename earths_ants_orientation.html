@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Earth's Ants — Affiliate Board Orientation</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+
+:root{
+  --black:#080c08;
+  --green:#6bff8a;
+  --green-dim:#3a7a45;
+  --green-pale:#d4ffe0;
+  --green-dark:#0d2218;
+  --surface:#0f1a10;
+  --border:#1e3a25;
+  --text:#e8ffe8;
+  --muted:#4a7a52;
+  --white:#f0fff4;
+}
+
+html,body{width:100%;height:100%;overflow:hidden;background:var(--black);font-family:'DM Sans',sans-serif;color:var(--text);}
+
+/* SLIDE CONTAINER */
+.deck{width:100vw;height:100vh;position:relative;overflow:hidden;}
+.slide{
+  position:absolute;inset:0;
+  display:flex;flex-direction:column;
+  padding:52px 64px;
+  opacity:0;pointer-events:none;
+  transition:opacity 0.5s ease,transform 0.5s ease;
+  transform:translateY(20px);
+  overflow:hidden;
+}
+.slide.active{opacity:1;pointer-events:all;transform:translateY(0);}
+.slide.exit{opacity:0;transform:translateY(-20px);}
+
+/* BG pattern */
+.slide::before{
+  content:'';position:absolute;inset:0;
+  background-image:radial-gradient(circle,#1e3a2520 1px,transparent 1px);
+  background-size:32px 32px;
+  pointer-events:none;z-index:0;
+}
+
+/* NAV */
+.nav{
+  position:fixed;bottom:32px;left:50%;transform:translateX(-50%);
+  display:flex;align-items:center;gap:12px;z-index:100;
+  background:rgba(8,12,8,0.9);border:1px solid var(--border);
+  padding:10px 20px;border-radius:50px;backdrop-filter:blur(10px);
+}
+.nav-btn{
+  background:none;border:1px solid var(--border);color:var(--muted);
+  font-family:'Space Mono',monospace;font-size:11px;letter-spacing:0.05em;
+  padding:6px 16px;border-radius:50px;cursor:pointer;transition:all 0.2s;
+}
+.nav-btn:hover{border-color:var(--green);color:var(--green);}
+.slide-count{font-family:'Space Mono',monospace;font-size:11px;color:var(--muted);min-width:48px;text-align:center;}
+.progress-dots{display:flex;gap:6px;align-items:center;}
+.pdot{width:6px;height:6px;border-radius:50%;background:var(--border);transition:all 0.3s;cursor:pointer;}
+.pdot.active{background:var(--green);width:18px;border-radius:3px;}
+
+/* TYPOGRAPHY */
+.tag{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.12em;color:var(--green);text-transform:uppercase;border:1px solid var(--border);padding:4px 12px;display:inline-block;margin-bottom:16px;}
+h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(60px,8vw,100px);line-height:0.9;color:var(--white);letter-spacing:2px;}
+h1 span{color:var(--green);}
+h2{font-family:'Bebas Neue',sans-serif;font-size:clamp(36px,5vw,60px);color:var(--white);letter-spacing:1px;line-height:1;}
+h2 span{color:var(--green);}
+h3{font-family:'DM Sans',sans-serif;font-size:18px;font-weight:600;color:var(--white);}
+p{font-size:15px;color:#8aaa90;line-height:1.6;}
+.mono{font-family:'Space Mono',monospace;}
+
+/* CARDS */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px 24px;}
+.card-grid{display:grid;gap:14px;}
+.card-grid.cols2{grid-template-columns:1fr 1fr;}
+.card-grid.cols3{grid-template-columns:1fr 1fr 1fr;}
+
+/* ACCENT LINE */
+.accent-line{width:48px;height:2px;background:var(--green);margin:12px 0 20px;}
+
+/* HIGHLIGHT BOX */
+.highlight{background:rgba(107,255,138,0.06);border:1px solid rgba(107,255,138,0.2);border-radius:8px;padding:12px 16px;}
+
+/* ICON CIRCLE */
+.icon-circle{width:44px;height:44px;border-radius:50%;background:rgba(107,255,138,0.08);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:20px;margin-bottom:10px;}
+
+/* QUIZ */
+.quiz-option{
+  background:var(--surface);border:1px solid var(--border);border-radius:8px;
+  padding:14px 18px;cursor:pointer;transition:all 0.25s;font-size:14px;color:#8aaa90;
+  display:flex;align-items:center;gap:10px;
+}
+.quiz-option:hover{border-color:var(--green-dim);color:var(--white);}
+.quiz-option.correct{border-color:var(--green);background:rgba(107,255,138,0.08);color:var(--green);}
+.quiz-option.wrong{border-color:#ff6b6b;background:rgba(255,107,107,0.08);color:#ff6b6b;}
+.quiz-option.disabled{pointer-events:none;}
+.quiz-letter{font-family:'Space Mono',monospace;font-size:11px;color:var(--muted);width:20px;flex-shrink:0;}
+.quiz-result{margin-top:14px;font-size:14px;font-weight:500;opacity:0;transition:opacity 0.4s;}
+.quiz-result.show{opacity:1;}
+
+/* TIMELINE */
+.timeline{display:flex;flex-direction:column;gap:0;}
+.tl-item{display:flex;gap:20px;align-items:flex-start;}
+.tl-line{display:flex;flex-direction:column;align-items:center;gap:0;}
+.tl-dot{width:12px;height:12px;border-radius:50%;background:var(--green);border:2px solid var(--black);flex-shrink:0;margin-top:4px;}
+.tl-bar{width:2px;flex:1;background:var(--border);min-height:24px;}
+.tl-content{padding-bottom:20px;flex:1;}
+
+/* SLIDE 1 — HERO */
+#s1{justify-content:center;background:radial-gradient(ellipse at 70% 50%,#0d2218 0%,var(--black) 60%);}
+.s1-layout{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center;position:relative;z-index:1;}
+.big-num{font-family:'Bebas Neue',sans-serif;font-size:180px;color:rgba(107,255,138,0.06);position:absolute;right:-20px;top:50%;transform:translateY(-50%);line-height:1;pointer-events:none;}
+
+/* SLIDE 7 — GIFT BOX */
+.gift-outer{display:flex;flex-direction:column;align-items:center;justify-content:center;flex:1;position:relative;z-index:1;}
+.gift-box-wrap{position:relative;cursor:pointer;}
+.gift-box{width:160px;height:140px;position:relative;transition:transform 0.3s;}
+.gift-box:hover{transform:scale(1.05);}
+.box-body{
+  width:160px;height:100px;background:linear-gradient(135deg,#0d2a18,#1a4a28);
+  border:2px solid var(--green-dim);border-radius:4px;position:absolute;bottom:0;
+  display:flex;align-items:center;justify-content:center;overflow:hidden;
+}
+.box-lid{
+  width:170px;height:36px;background:linear-gradient(135deg,#112e1c,#1e5630);
+  border:2px solid var(--green);border-radius:4px;position:absolute;top:0;left:-5px;
+  transition:transform 0.6s cubic-bezier(0.34,1.56,0.64,1),opacity 0.4s;
+  transform-origin:left center;
+}
+.gift-box-wrap.opened .box-lid{transform:rotate(-80deg) translateY(-20px);opacity:0;}
+.ribbon-v{position:absolute;width:4px;background:var(--green);top:0;bottom:0;left:50%;transform:translateX(-50%);}
+.ribbon-h{position:absolute;height:4px;background:var(--green);left:0;right:0;top:50%;transform:translateY(-50%);}
+.bow{position:absolute;top:-14px;left:50%;transform:translateX(-50%);font-size:24px;}
+.box-shine{
+  position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(107,255,138,0.05) 0%,transparent 60%);
+}
+
+/* confetti particles */
+.confetti-container{position:absolute;inset:0;pointer-events:none;overflow:hidden;}
+.conf{
+  position:absolute;width:8px;height:8px;border-radius:2px;opacity:0;
+  animation:confFall 1.8s ease-in forwards;
+}
+@keyframes confFall{
+  0%{opacity:1;transform:translateY(-20px) rotate(0deg);}
+  100%{opacity:0;transform:translateY(300px) rotate(720deg);}
+}
+
+/* surprise message */
+.surprise-msg{
+  max-width:580px;text-align:center;opacity:0;transform:translateY(20px);
+  transition:all 0.6s ease 0.4s;
+}
+.surprise-msg.show{opacity:1;transform:translateY(0);}
+.surprise-msg h3{font-family:'Bebas Neue',sans-serif;font-size:38px;color:var(--white);letter-spacing:1px;margin-bottom:8px;}
+.surprise-msg p{font-size:15px;color:#8aaa90;line-height:1.7;}
+.welcome-badge{
+  display:inline-block;margin-top:16px;font-family:'Space Mono',monospace;font-size:11px;
+  color:var(--green);border:1px solid var(--green);padding:6px 18px;border-radius:50px;
+  animation:pulse 2s ease-in-out infinite;
+}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(107,255,138,0.3);}50%{box-shadow:0 0 0 8px rgba(107,255,138,0);}}
+
+/* STAGGER ANIMATIONS */
+.fade-in{opacity:0;animation:fadeUp 0.6s ease forwards;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
+.d1{animation-delay:0.1s;}.d2{animation-delay:0.2s;}.d3{animation-delay:0.3s;}.d4{animation-delay:0.4s;}.d5{animation-delay:0.5s;}.d6{animation-delay:0.6s;}
+
+/* SCROLLABLE AREA for long slides */
+.scroll-area{overflow-y:auto;flex:1;padding-right:8px;scrollbar-width:thin;scrollbar-color:var(--border) transparent;}
+.scroll-area::-webkit-scrollbar{width:4px;}
+.scroll-area::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px;}
+
+/* FUNNY CALLOUT */
+.funny-box{
+  background:rgba(107,255,138,0.04);border:1px dashed var(--green-dim);
+  border-radius:8px;padding:12px 16px;display:flex;gap:12px;align-items:flex-start;
+  font-size:13px;color:#6aaa72;font-style:italic;
+}
+</style>
+</head>
+<body>
+<div class="deck" id="deck">
+
+<!-- ═══════════════════════════════════════════ SLIDE 1 — HERO -->
+<div class="slide active" id="s1">
+  <div class="confetti-container" id="heroConf"></div>
+  <div class="s1-layout">
+    <div style="position:relative;z-index:2;">
+      <div class="tag fade-in d1">🌿 Operation GreenForce · Season 6.0</div>
+      <h1 class="fade-in d2">AFFILIATE<br>BOARD<br><span>ORIENTATION</span></h1>
+      <div class="accent-line fade-in d3"></div>
+      <p class="fade-in d4" style="max-width:340px;">Welcome, you magnificent environmental warrior. You said yes. The ants said <em style="color:var(--green)">"finally."</em></p>
+      <div style="display:flex;gap:12px;margin-top:28px;" class="fade-in d5">
+        <div class="highlight"><span class="mono" style="font-size:12px;color:var(--green);">10 MAY 2026</span><br><span style="font-size:12px;color:var(--muted);">Orientation Date</span></div>
+        <div class="highlight"><span class="mono" style="font-size:12px;color:var(--green);">6 MONTHS</span><br><span style="font-size:12px;color:var(--muted);">Min. Commitment</span></div>
+        <div class="highlight"><span class="mono" style="font-size:12px;color:var(--green);">FW MODEL</span><br><span style="font-size:12px;color:var(--muted);">Flexible Workflow</span></div>
+      </div>
+    </div>
+    <div style="position:relative;z-index:2;" class="fade-in d3">
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px;text-align:center;">
+        <div style="font-size:72px;margin-bottom:8px;">🐜</div>
+        <div class="tag" style="margin-bottom:12px;">The Ant Philosophy</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;">
+          <div class="card" style="text-align:center;padding:12px 8px;">
+            <div style="font-size:22px;">🤝</div>
+            <div style="font-size:11px;font-weight:600;color:var(--green);margin-top:6px;">Unity</div>
+          </div>
+          <div class="card" style="text-align:center;padding:12px 8px;">
+            <div style="font-size:22px;">⚙️</div>
+            <div style="font-size:11px;font-weight:600;color:var(--green);margin-top:6px;">Discipline</div>
+          </div>
+          <div class="card" style="text-align:center;padding:12px 8px;">
+            <div style="font-size:22px;">⚡</div>
+            <div style="font-size:11px;font-weight:600;color:var(--green);margin-top:6px;">Efficiency</div>
+          </div>
+        </div>
+        <p style="font-size:12px;margin-top:14px;font-style:italic;">"Think, Live and Work Like Ants"</p>
+      </div>
+    </div>
+  </div>
+  <div class="big-num" style="z-index:0;">6.0</div>
+</div>
+
+<!-- ═══════════════════════════════════════════ SLIDE 2 — WHO ARE YOU? -->
+<div class="slide" id="s2">
+  <div style="position:relative;z-index:1;flex:1;display:flex;flex-direction:column;">
+    <div class="tag fade-in d1">Slide 02 · Your Role</div>
+    <h2 class="fade-in d2">SO, WHO ARE <span>YOU</span>?</h2>
+    <div class="accent-line fade-in d3"></div>
+    <div class="card-grid cols2 fade-in d3" style="flex:1;align-content:start;">
+      <div class="card" style="grid-column:1/-1;background:rgba(107,255,138,0.05);border-color:rgba(107,255,138,0.2);">
+        <h3 style="color:var(--green);margin-bottom:6px;">Affiliate Member — Specialists & Enthusiasts</h3>
+        <p style="font-size:14px;">A results-oriented contributor who brings skills to the table without drowning in admin work. You execute. You deliver. You go home and sleep well. 😴</p>
+      </div>
+      <div class="card">
+        <div class="icon-circle">🎯</div>
+        <h3 style="font-size:15px;margin-bottom:6px;">What You Do</h3>
+        <div class="timeline">
+          <div class="tl-item"><div class="tl-line"><div class="tl-dot"></div><div class="tl-bar"></div></div><div class="tl-content"><p style="font-size:13px;"><strong style="color:var(--white);">Path A</strong> — Field Campaigns & physical presence</p></div></div>
+          <div class="tl-item"><div class="tl-line"><div class="tl-dot"></div><div class="tl-bar"></div></div><div class="tl-content"><p style="font-size:13px;"><strong style="color:var(--white);">Path B</strong> — Content creation, media & digital advocacy</p></div></div>
+          <div class="tl-item"><div class="tl-line"><div class="tl-dot"></div></div><div class="tl-content"><p style="font-size:13px;"><strong style="color:var(--white);">Path C</strong> — Research assistance & data gathering</p></div></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="icon-circle">⚖️</div>
+        <h3 style="font-size:15px;margin-bottom:10px;">Your Work Model</h3>
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <div class="highlight"><span style="font-size:13px;color:var(--white);">🕐 Flexible Workflow (FW)</span><br><span style="font-size:12px;color:var(--muted);">Project-by-project basis. You manage your hours.</span></div>
+          <div class="highlight"><span style="font-size:13px;color:var(--white);">🌱 Balanced Atmosphere</span><br><span style="font-size:12px;color:var(--muted);">Non-burnout pace. Community-focused engagement.</span></div>
+          <div class="highlight"><span style="font-size:13px;color:var(--white);">🎓 Ideal For</span><br><span style="font-size:12px;color:var(--muted);">Students & professionals with external commitments.</span></div>
+        </div>
+      </div>
+      <div class="card" style="grid-column:1/-1;">
+        <div class="funny-box">
+          <span>🐜</span>
+          <span>Quick distinction: You are NOT a paid employee. You are a <strong style="color:var(--green-pale);">voluntary superhero</strong> with a very good LinkedIn story. Please don't sign contracts on our behalf. We beg. 🙏</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ SLIDE 3 — MISSION -->
+<div class="slide" id="s3">
+  <div style="position:relative;z-index:1;flex:1;display:flex;flex-direction:column;">
+    <div class="tag fade-in d1">Slide 03 · Mission & Purpose</div>
+    <h2 class="fade-in d2">WHY WE <span>EXIST</span></h2>
+    <div class="accent-line fade-in d3"></div>
+    <div class="scroll-area fade-in d3">
+      <div class="card-grid cols3" style="margin-bottom:14px;">
+        <div class="card">
+          <div class="icon-circle">📢</div>
+          <h3 style="font-size:14px;margin-bottom:4px;">Raise Awareness</h3>
+          <p style="font-size:12px;">Educating the public, policymakers & businesses about environmental conservation and climate science.</p>
+        </div>
+        <div class="card">
+          <div class="icon-circle">🏛️</div>
+          <h3 style="font-size:14px;margin-bottom:4px;">Advocacy</h3>
+          <p style="font-size:12px;">Influencing environmental policy, reducing carbon emissions, and conserving biodiversity.</p>
+        </div>
+        <div class="card">
+          <div class="icon-circle">🔬</div>
+          <h3 style="font-size:14px;margin-bottom:4px;">Research</h3>
+          <p style="font-size:12px;">Gathering data and scientific evidence to back campaigns and policy recommendations.</p>
+        </div>
+        <div class="card">
+          <div class="icon-circle">🌊</div>
+          <h3 style="font-size:14px;margin-bottom:4px;">Biodiversity</h3>
+          <p style="font-size:12px;">Protecting endangered species, forests, and oceans from human-caused degradation.</p>
+        </div>
+        <div class="card">
+          <div class="icon-circle">♻️</div>
+          <h3 style="font-size:14px;margin-bottom:4px;">Sustainability</h3>
+          <p style="font-size:12px;">Encouraging sustainable energy, agriculture, transport & waste management globally.</p>
+        </div>
+        <div class="card">
+          <div class="icon-circle">☀️</div>
+          <h3 style="font-size:14px;margin-bottom:4px;">Renewable Energy</h3>
+          <p style="font-size:12px;">Pushing the transition from fossil fuels to solar, wind, and hydropower energy sources.</p>
+        </div>
+      </div>
+      <div class="card" style="background:rgba(107,255,138,0.05);border-color:rgba(107,255,138,0.2);">
+        <div style="display:flex;gap:16px;align-items:center;flex-wrap:wrap;">
+          <div style="font-size:42px;">🌍</div>
+          <div>
+            <h3 style="color:var(--green);margin-bottom:4px;">Earth's Ants — Nationally & Globally Recognized</h3>
+            <p style="font-size:13px;">A youth-led organization mobilizing the next generation to <strong style="color:var(--white);">protect, innovate, and lead</strong> in the environmental sector. You just joined this movement. No pressure. Actually, a little pressure. The planet's counting on you. 🌿</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ SLIDE 4 — GUIDELINES -->
+<div class="slide" id="s4">
+  <div style="position:relative;z-index:1;flex:1;display:flex;flex-direction:column;">
+    <div class="tag fade-in d1">Slide 04 · Guidelines</div>
+    <h2 class="fade-in d2">THE <span>RULES</span><br>(Yes, There Are Rules)</h2>
+    <div class="accent-line fade-in d3"></div>
+    <div class="scroll-area fade-in d3">
+      <div class="card-grid cols2" style="margin-bottom:14px;">
+        <div class="card">
+          <h3 style="font-size:14px;color:var(--green);margin-bottom:10px;">⏰ Punctuality & Presence</h3>
+          <p style="font-size:13px;">Attend weekly & monthly meetings. The <strong style="color:var(--white);">50% attendance rule</strong> is real. Ghosts work better in haunted houses, not here.</p>
+        </div>
+        <div class="card">
+          <h3 style="font-size:14px;color:var(--green);margin-bottom:10px;">🤐 Confidentiality</h3>
+          <p style="font-size:13px;">Keep org strategies, data, and internal info private. What happens in Earth's Ants… stays in Earth's Ants.</p>
+        </div>
+        <div class="card">
+          <h3 style="font-size:14px;color:var(--green);margin-bottom:10px;">📧 Communication Protocol</h3>
+          <p style="font-size:13px;">Use CEC-assigned email signature for org activities ONLY. Don't use it to impress your crush. 💌</p>
+        </div>
+        <div class="card">
+          <h3 style="font-size:14px;color:var(--green);margin-bottom:10px;">📸 Digital Ethics</h3>
+          <p style="font-size:13px;">Recording & posting meeting content requires <strong style="color:var(--white);">prior CEC consent</strong>. Yes, that TikTok idea needs approval first.</p>
+        </div>
+        <div class="card">
+          <h3 style="font-size:14px;color:var(--green);margin-bottom:10px;">⚡ Efficiency</h3>
+          <p style="font-size:13px;">Complete tasks on time with the diligence expected of an ant. Ants carry 50x their weight. No excuses. 💪</p>
+        </div>
+        <div class="card">
+          <h3 style="font-size:14px;color:var(--green);margin-bottom:10px;">🏆 Recommendation Policy</h3>
+          <p style="font-size:13px;"><strong style="color:var(--white);">Minimum 6 months</strong> service required. Subject to KPI review + majority CEC vote + Chairperson approval. Earn it. 📜</p>
+        </div>
+      </div>
+      <div class="funny-box">
+        <span>⚠️</span>
+        <span>You are a <strong style="color:var(--green-pale);">voluntary contributor</strong>, not a paid employee. Don't introduce yourself as "CEO of Earth's Ants" at your next networking event. The CEC will find out. They always do. 👁️</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ SLIDE 5 — QUIZ 1 -->
+<div class="slide" id="s5">
+  <div style="position:relative;z-index:1;flex:1;display:flex;flex-direction:column;justify-content:center;">
+    <div class="tag fade-in d1">🧠 Knowledge Check #1</div>
+    <h2 class="fade-in d2" style="font-size:40px;">PUZZLE TIME,<br><span>AFFILIATE!</span></h2>
+    <div class="accent-line fade-in d3"></div>
+    <div class="card fade-in d3" style="max-width:700px;margin-bottom:16px;">
+      <p style="font-size:16px;color:var(--white);font-weight:500;margin-bottom:6px;">🤔 Question 1 of 3</p>
+      <h3 style="font-size:20px;color:var(--white);font-weight:400;line-height:1.4;margin-bottom:16px;">You've been an Earth's Ants member for 5 months and 29 days. Your supervisor asks for a recommendation letter. What do you say?</h3>
+      <div style="display:flex;flex-direction:column;gap:8px;" id="q1opts">
+        <div class="quiz-option" onclick="answerQ(this,'wrong','q1res')">
+          <span class="quiz-letter">A</span>
+          <span>"Sure! I'll write it myself and sign the Chairperson's name." ✍️</span>
+        </div>
+        <div class="quiz-option" onclick="answerQ(this,'wrong','q1res')">
+          <span class="quiz-letter">B</span>
+          <span>"I've been here long enough, just give it to me!" 😤</span>
+        </div>
+        <div class="quiz-option" onclick="answerQ(this,'correct','q1res')">
+          <span class="quiz-letter">C</span>
+          <span>"I'm 1 day short of 6 months. I'll wait and then apply through proper channels." 🕐</span>
+        </div>
+        <div class="quiz-option" onclick="answerQ(this,'wrong','q1res')">
+          <span class="quiz-letter">D</span>
+          <span>"I'll post about it publicly to pressure the CEC." 📣</span>
+        </div>
+      </div>
+      <div class="quiz-result" id="q1res"></div>
+    </div>
+    <div class="funny-box fade-in d4">
+      <span>💡</span>
+      <span>Minimum 6 months. Then KPI review. Then CEC majority vote. Then Chairperson approval. Patience is a virtue, and also literally written in the constitution.</span>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ SLIDE 6 — QUIZ 2 & 3 -->
+<div class="slide" id="s6">
+  <div style="position:relative;z-index:1;flex:1;display:flex;flex-direction:column;justify-content:center;">
+    <div class="tag fade-in d1">🧠 Knowledge Check #2 & #3</div>
+    <h2 class="fade-in d2" style="font-size:36px;">THINK BEFORE <span>YOU ACT!</span></h2>
+    <div class="accent-line fade-in d3"></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;" class="fade-in d3">
+      <div class="card">
+        <p style="font-size:13px;color:var(--muted);margin-bottom:8px;">🤔 Question 2 of 3</p>
+        <p style="font-size:15px;color:var(--white);margin-bottom:14px;line-height:1.5;">You're super excited about a meeting and want to share a video clip on your Instagram. What's the move?</p>
+        <div style="display:flex;flex-direction:column;gap:6px;" id="q2opts">
+          <div class="quiz-option" onclick="answerQ(this,'wrong','q2res')"><span class="quiz-letter">A</span><span>Post it immediately with #EarthsAnts 🚀</span></div>
+          <div class="quiz-option" onclick="answerQ(this,'correct','q2res')"><span class="quiz-letter">B</span><span>Get prior CEC consent + consent from people in the video first ✅</span></div>
+          <div class="quiz-option" onclick="answerQ(this,'wrong','q2res')"><span class="quiz-letter">C</span><span>Post it privately to only 500 followers 🤫</span></div>
+        </div>
+        <div class="quiz-result" id="q2res"></div>
+      </div>
+      <div class="card">
+        <p style="font-size:13px;color:var(--muted);margin-bottom:8px;">🤔 Question 3 of 3</p>
+        <p style="font-size:15px;color:var(--white);margin-bottom:14px;line-height:1.5;">You're at a job fair and someone asks your current role. What do you say?</p>
+        <div style="display:flex;flex-direction:column;gap:6px;" id="q3opts">
+          <div class="quiz-option" onclick="answerQ(this,'wrong','q3res')"><span class="quiz-letter">A</span><span>"I'm a paid senior consultant at Earth's Ants." 💰</span></div>
+          <div class="quiz-option" onclick="answerQ(this,'wrong','q3res')"><span class="quiz-letter">B</span><span>"I'm the acting CEO." 😂</span></div>
+          <div class="quiz-option" onclick="answerQ(this,'correct','q3res')"><span class="quiz-letter">C</span><span>"I'm a voluntary Affiliate Member at Earth's Ants, a youth environmental org." 🌿</span></div>
+        </div>
+        <div class="quiz-result" id="q3res"></div>
+      </div>
+    </div>
+    <div class="funny-box fade-in d4" style="margin-top:14px;">
+      <span>🐜</span>
+      <span>Ants are honest. They never pretend to be the queen. Be the ant. Not the fake queen. 👑❌</span>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ SLIDE 7 — CODE OF CONDUCT -->
+<div class="slide" id="s7">
+  <div style="position:relative;z-index:1;flex:1;display:flex;flex-direction:column;">
+    <div class="tag fade-in d1">Slide 05 · Code of Conduct</div>
+    <h2 class="fade-in d2">THE <span>DO'S</span> AND<br>ABSOLUTE <span>DON'TS</span></h2>
+    <div class="accent-line fade-in d3"></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;flex:1;" class="fade-in d3">
+      <div>
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;">
+          <div style="width:28px;height:28px;background:rgba(107,255,138,0.12);border:1px solid var(--green);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;">✅</div>
+          <h3 style="font-size:16px;color:var(--green);">You Should</h3>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <div class="card" style="padding:12px 16px;"><p style="font-size:13px;">🤝 Demonstrate <strong style="color:var(--white);">respect, transparency & accountability</strong> in all engagements</p></div>
+          <div class="card" style="padding:12px 16px;"><p style="font-size:13px;">📋 Actively participate in meetings, projects & awareness campaigns</p></div>
+          <div class="card" style="padding:12px 16px;"><p style="font-size:13px;">🌍 Represent Earth's Ants with <strong style="color:var(--white);">professionalism</strong> in all forums</p></div>
+          <div class="card" style="padding:12px 16px;"><p style="font-size:13px;">💼 Add this experience to your <strong style="color:var(--white);">CV & LinkedIn</strong> (not as paid employment!)</p></div>
+          <div class="card" style="padding:12px 16px;"><p style="font-size:13px;">🔔 Use org email signature <strong style="color:var(--white);">only</strong> for official Earth's Ants communication</p></div>
+        </div>
+      </div>
+      <div>
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;">
+          <div style="width:28px;height:28px;background:rgba(255,107,107,0.1);border:1px solid #ff6b6b;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;">❌</div>
+          <h3 style="font-size:16px;color:#ff6b6b;">You Should Not</h3>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <div class="card" style="padding:12px 16px;border-color:rgba(255,107,107,0.2);"><p style="font-size:13px;">🚫 Discriminate, harass, or engage in harmful behavior</p></div>
+          <div class="card" style="padding:12px 16px;border-color:rgba(255,107,107,0.2);"><p style="font-size:13px;">🔒 Leak confidential org strategies or internal data</p></div>
+          <div class="card" style="padding:12px 16px;border-color:rgba(255,107,107,0.2);"><p style="font-size:13px;">💸 Misuse org identity for <strong style="color:#ffaaaa;">personal or financial gain</strong></p></div>
+          <div class="card" style="padding:12px 16px;border-color:rgba(255,107,107,0.2);"><p style="font-size:13px;">📵 Record & post meeting content without <strong style="color:#ffaaaa;">prior CEC consent</strong></p></div>
+          <div class="card" style="padding:12px 16px;border-color:rgba(255,107,107,0.2);"><p style="font-size:13px;">👻 Ghost the organization. Inactivity = removal. Ants don't ghost. 🐜</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ SLIDE 8 — QUICK POLICY FACTS -->
+<div class="slide" id="s8">
+  <div style="position:relative;z-index:1;flex:1;display:flex;flex-direction:column;justify-content:center;">
+    <div class="tag fade-in d1">Slide 06 · Policy Snapshot</div>
+    <h2 class="fade-in d2">THINGS YOU NEED TO <span>MEMORIZE</span></h2>
+    <div class="accent-line fade-in d3"></div>
+    <div class="card-grid cols3 fade-in d3" style="margin-bottom:16px;">
+      <div class="card" style="text-align:center;padding:24px 16px;">
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:52px;color:var(--green);line-height:1;">6</div>
+        <p style="font-size:13px;margin-top:4px;color:var(--white);">Months minimum</p>
+        <p style="font-size:12px;">before recommendation eligibility</p>
+      </div>
+      <div class="card" style="text-align:center;padding:24px 16px;">
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:52px;color:var(--green);line-height:1;">50%</div>
+        <p style="font-size:13px;margin-top:4px;color:var(--white);">Attendance rule</p>
+        <p style="font-size:12px;">for meetings & official sessions</p>
+      </div>
+      <div class="card" style="text-align:center;padding:24px 16px;">
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:52px;color:var(--green);line-height:1;">2W</div>
+        <p style="font-size:13px;margin-top:4px;color:var(--white);">Written notice</p>
+        <p style="font-size:12px;">if you choose to resign</p>
+      </div>
+      <div class="card" style="text-align:center;padding:24px 16px;">
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:52px;color:var(--green);line-height:1;">5D</div>
+        <p style="font-size:13px;margin-top:4px;color:var(--white);">Working days</p>
+        <p style="font-size:12px;">to confirm acceptance via email</p>
+      </div>
+      <div class="card" style="text-align:center;padding:24px 16px;">
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:52px;color:var(--green);line-height:1;">3✓</div>
+        <p style="font-size:13px;margin-top:4px;color:var(--white);">Steps for reco</p>
+        <p style="font-size:12px;">KPI + CEC vote + Chairperson OK</p>
+      </div>
+      <div class="card" style="text-align:center;padding:24px 16px;">
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:52px;color:var(--green);line-height:1;">0💰</div>
+        <p style="font-size:13px;margin-top:4px;color:var(--white);">Paid salary</p>
+        <p style="font-size:12px;">voluntary role (unless specified)</p>
+      </div>
+    </div>
+    <div class="funny-box fade-in d4">
+      <span>🧾</span>
+      <span>The Central Executive Council reserves <strong style="color:var(--green-pale);">all rights</strong> regarding your participation. Translation: CEC is the boss. The Chairperson is the final boss. Respect the hierarchy. 🏛️</span>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ SLIDE 9 — GIFT BOX SURPRISE -->
+<div class="slide" id="s9" style="justify-content:center;align-items:center;">
+  <div class="confetti-container" id="confettiBox"></div>
+  <div class="gift-outer">
+    <div class="tag fade-in d1" style="margin-bottom:24px;">🎁 Slide 07 · A Little Surprise</div>
+    <div class="gift-box-wrap fade-in d2" id="giftWrap" onclick="openGift()" style="margin-bottom:32px;">
+      <div class="gift-box">
+        <div class="box-lid">
+          <div class="ribbon-v"></div>
+          <div class="ribbon-h"></div>
+          <div class="bow">🎀</div>
+        </div>
+        <div class="box-body">
+          <div class="box-shine"></div>
+          <span style="font-family:'Space Mono',monospace;font-size:11px;color:var(--green-dim);">CLICK TO OPEN</span>
+        </div>
+      </div>
+    </div>
+    <div class="surprise-msg" id="surpriseMsg">
+      <h3>YOU'RE AN ANT NOW. 🐜</h3>
+      <p>Not the small, easily-ignored kind. The kind that moves mountains (or at least, starts environmental campaigns that make governments uncomfortable).</p>
+      <p style="margin-top:12px;">You joined a community of <strong style="color:var(--white);">passionate, purpose-driven young people</strong> who genuinely believe they can change the world — and are already doing it, one project at a time.</p>
+      <p style="margin-top:12px;font-style:italic;color:var(--green-dim);">"The strength of Earth's Ants lies in its people — passionate, committed, and courageous young individuals like you who believe in the power of change."</p>
+      <p style="margin-top:12px;">So show up. Do the work. Follow the ant philosophy. And remember — even the tiniest ant can carry 50x its own weight.</p>
+      <p style="margin-top:12px;font-size:22px;">🌿🐜🌍</p>
+      <div class="welcome-badge">WELCOME TO EARTH'S ANTS · SEASON 6.0</div>
+    </div>
+  </div>
+</div>
+
+</div><!-- end deck -->
+
+<!-- NAVIGATION -->
+<nav class="nav" id="navBar">
+  <button class="nav-btn" onclick="changeSlide(-1)">← PREV</button>
+  <div class="progress-dots" id="dots"></div>
+  <span class="slide-count" id="slideCount">1 / 9</span>
+  <button class="nav-btn" onclick="changeSlide(1)">NEXT →</button>
+</nav>
+
+<script>
+const TOTAL = 9;
+let current = 1;
+
+function buildDots(){
+  const d = document.getElementById('dots');
+  for(let i=1;i<=TOTAL;i++){
+    const dot = document.createElement('div');
+    dot.className='pdot'+(i===1?' active':'');
+    dot.onclick=(()=>{const n=i;return()=>goTo(n);})();
+    d.appendChild(dot);
+  }
+}
+
+function goTo(n){
+  if(n<1||n>TOTAL)return;
+  const slides=document.querySelectorAll('.slide');
+  slides[current-1].classList.remove('active');
+  slides[current-1].classList.add('exit');
+  setTimeout(()=>slides[current-1].classList.remove('exit'),500);
+  current=n;
+  slides[current-1].classList.add('active');
+  // restart animations
+  slides[current-1].querySelectorAll('.fade-in').forEach(el=>{
+    el.style.animation='none';
+    el.offsetHeight;
+    el.style.animation='';
+  });
+  document.getElementById('slideCount').textContent=current+' / '+TOTAL;
+  document.querySelectorAll('.pdot').forEach((d,i)=>d.classList.toggle('active',i===current-1));
+}
+
+function changeSlide(dir){goTo(current+dir);}
+
+// Quiz logic
+function answerQ(el,result,resId){
+  const container=el.parentElement;
+  container.querySelectorAll('.quiz-option').forEach(o=>o.classList.add('disabled'));
+  el.classList.add(result);
+  const res=document.getElementById(resId);
+  if(result==='correct'){
+    res.textContent='✅ Correct! You are officially smarter than the average ant.';
+    res.style.color='var(--green)';
+  } else {
+    res.textContent='❌ Nope! Read the guidelines again, dear future ant. 🐜';
+    res.style.color='#ff6b6b';
+    // highlight correct
+    container.querySelectorAll('.quiz-option').forEach(o=>{
+      if(o.getAttribute('onclick').includes("'correct'")){o.classList.add('correct');}
+    });
+  }
+  res.classList.add('show');
+}
+
+// Gift box
+function openGift(){
+  const wrap=document.getElementById('giftWrap');
+  if(wrap.classList.contains('opened'))return;
+  wrap.classList.add('opened');
+  setTimeout(()=>{document.getElementById('surpriseMsg').classList.add('show');},400);
+  launchConfetti('confettiBox');
+}
+
+function launchConfetti(containerId){
+  const container=document.getElementById(containerId);
+  const colors=['#6bff8a','#a8ffb8','#d4ffe0','#3a7a45','#ffffff'];
+  for(let i=0;i<60;i++){
+    const c=document.createElement('div');
+    c.className='conf';
+    c.style.left=Math.random()*100+'%';
+    c.style.top=Math.random()*40+'%';
+    c.style.background=colors[Math.floor(Math.random()*colors.length)];
+    c.style.width=(Math.random()*8+4)+'px';
+    c.style.height=(Math.random()*8+4)+'px';
+    c.style.animationDelay=(Math.random()*0.8)+'s';
+    c.style.animationDuration=(Math.random()*1+1.2)+'s';
+    c.style.borderRadius=Math.random()>0.5?'50%':'2px';
+    container.appendChild(c);
+    setTimeout(()=>c.remove(),2500);
+  }
+}
+
+// Keyboard nav
+document.addEventListener('keydown',e=>{
+  if(e.key==='ArrowRight'||e.key==='ArrowDown')changeSlide(1);
+  if(e.key==='ArrowLeft'||e.key==='ArrowUp')changeSlide(-1);
+});
+
+buildDots();
+
+// Hero confetti on load
+setTimeout(()=>launchConfetti('heroConf'),600);
+</script>
+</body>
+</html>
